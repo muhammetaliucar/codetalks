@@ -23,6 +23,7 @@ import CustomDrawer from './components/CustomDrawer/CustomDrawer';
 import OtherProfile from './Auth/OtherProfile/OtherProfile';
 import Users from './Auth/Users/Users';
 import {UserProvider} from './context/UserContext';
+
 const Stack = createStackNavigator();
 const BottomTab = createBottomTabNavigator();
 const Drawer = createDrawerNavigator();

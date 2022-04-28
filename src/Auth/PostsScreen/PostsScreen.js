@@ -6,13 +6,13 @@ import auth from '@react-native-firebase/auth';
 import firestore from '@react-native-firebase/firestore';
 import parsedContentData from '../../utils/parsedContentData';
 import PostInputModal from '../../components/PostInputModal';
+import UserContext from '../../context/UserContext';
 
 const PostsScreen = () => {
   const [postsData, setPostsData] = React.useState([]);
-  const [deneme, setDeneme] = React.useState();
-  const [uid, setUid] = React.useState();
+  const {data, setData} = React.useContext(UserContext);
 
-  React.useEffect(() => {}, []);
+  console.log(data, 'wegre');
 
   React.useEffect(() => {
     firestore()
@@ -22,15 +22,6 @@ const PostsScreen = () => {
           documentSnapshot.docs.map(x => x.data()) || {},
         );
         setPostsData(parsedData);
-      });
-
-    firestore()
-      .collection('users')
-      .where('name', '==', auth().currentUser.displayName)
-      .onSnapshot(res => {
-        const parsedData = parsedContentData(res.docs.map(x => x.data()));
-        setUid(parsedData[0].userId, 'parsed');
-        console.log(uid);
       });
   }, []);
 
@@ -46,15 +37,13 @@ const PostsScreen = () => {
   const handleSendContent = async content1 => {
     setIsModalVisible(!isModalVisible);
     await firestore().collection('posts').add({
-      author: auth().currentUser.displayName,
       content: content1,
-      profilePhoto: auth().currentUser.photoURL,
       date: new Date().toISOString(),
-      uid: uid,
+      uid: data.userId,
     });
   };
   return (
-    <SafeAreaView style={{flex: 1}}>
+    <SafeAreaView style={{flex: 1, backgroundColor: 'white'}}>
       <FlatList
         data={[...postsData].reverse()}
         renderItem={({item}) => <PostCard data={item} />}

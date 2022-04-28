@@ -16,10 +16,12 @@ import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import firestore from '@react-native-firebase/firestore';
 import parsedContentData from '../../utils/parsedContentData';
 import PostCard from '../../components/PostCard';
+import UserContext from '../../context/UserContext';
 
 const Profile = () => {
   const [uid, setUid] = React.useState('');
   const [contentList, setContentList] = React.useState({});
+  const {data, setData} = React.useContext(UserContext);
 
   React.useEffect(() => {
     console.log(
@@ -112,10 +114,10 @@ const Profile = () => {
 
           <View>
             <Text style={{fontSize: 30, color: 'white', marginStart: 20}}>
-              {auth().currentUser.displayName}
+              {data.name}
             </Text>
             <Text style={{fontSize: 18, color: 'white', marginStart: 20}}>
-              {auth().currentUser.email}
+              {data.email}
             </Text>
             <Text style={{fontSize: 18, color: 'white', marginStart: 20}}>
               Post Sayısı:{Object.keys(contentList).length}

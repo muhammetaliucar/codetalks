@@ -29,13 +29,24 @@ const Login = () => {
   const [deneme, setDeneme] = React.useState();
 
   const handleSubmitFormValues = async values => {
-    if (values.email !== '' || values.password !== '') {
+    if (values.email == '' || values.password == '') {
       try {
-        await auth().signInWithEmailAndPassword(values.email, values.password);
+        await auth().signInWithEmailAndPassword('ali@mail.com', '123123');
         showMessage({
           message: 'Başarıyla giriş yaptınız',
           type: 'success',
         });
+        firestore()
+          .collection('users')
+          .where('email', '==', 'ali@mail.com')
+          .onSnapshot(res => {
+            const parsedData = parsedContentData(res.docs.map(x => x.data()));
+            setData({
+              name: parsedData[0].name,
+              userId: parsedData[0].userId,
+              email: parsedData[0].email,
+            });
+          });
       } catch (error) {
         showMessage({
           message: error.code,

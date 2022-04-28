@@ -2,8 +2,14 @@ import React from 'react';
 import {View, Text, Dimensions, Image, TouchableOpacity} from 'react-native';
 import {formatDistance, subDays, parseISO} from 'date-fns';
 import {useNavigation} from '@react-navigation/native';
+import firestore from '@react-native-firebase/firestore';
 
 const PostCard = ({data}) => {
+  console.log(data, 'fsgs');
+
+  // React.useEffect(() => {
+  //   firestore().collection("users").where(data.uid,"==","userId").onSnapshot(res => )
+  // }, []);
   const navigation = useNavigation();
   const deneme = data.author;
   const formattedDate = formatDistance(parseISO(data.date), new Date(), {
