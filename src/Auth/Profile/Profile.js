@@ -5,6 +5,7 @@ import {
   Text,
   Image,
   TouchableOpacity,
+  Button,
   FlatList,
 } from 'react-native';
 import styles from './Profile.style';
@@ -19,37 +20,20 @@ import PostCard from '../../components/PostCard';
 import UserContext from '../../context/UserContext';
 
 const Profile = () => {
-  const [uid, setUid] = React.useState('');
   const [contentList, setContentList] = React.useState({});
   const {data, setData} = React.useContext(UserContext);
 
   React.useEffect(() => {
-    console.log(
-      firestore()
-        .collection('posts')
-        .where('author', '==', auth().currentUser.displayName)
-        .onSnapshot(documentSnapshot => {
-          const parsedData = parsedContentData(
-            documentSnapshot.docs.map(x => x.data()) || {},
-          );
-          setContentList(parsedData);
-          console.log(contentList);
-        }),
-    );
-  }, []);
-
-  React.useEffect(() => {
     firestore()
-      .collection('users')
-      .where('name', '==', auth().currentUser.displayName)
-      .get()
-      .then(res => {
-        setUid(res.docs.map(x => x.id));
-        console.log(uid);
+      .collection('posts')
+      .where('author', '==', auth().currentUser.displayName)
+      .onSnapshot(documentSnapshot => {
+        const parsedData = parsedContentData(
+          documentSnapshot.docs.map(x => x.data()) || {},
+        );
+        setContentList(parsedData);
       });
-  }, [setUid]);
-
-  const deneme = auth().currentUser.photoURL;
+  }, []);
 
   const [downloadUrl, setDownloadUrl] = React.useState();
   const [uploadTask, setUploadTask] = React.useState();
@@ -80,6 +64,7 @@ const Profile = () => {
         await auth().currentUser.updateProfile({
           photoURL: downloadUrl,
         });
+        await setData({photoUrl: downloadUrl});
 
         setUploadTaskSnapshot({});
       });
@@ -91,7 +76,7 @@ const Profile = () => {
       <View style={styles.containerUp}>
         <View style={styles.containerUpInnerContainer}>
           <View>
-            <Image style={styles.image} source={{uri: deneme}} />
+            <Image style={styles.image} source={{uri: data.photoUrl}} />
             <View style={styles.photoButtonArea}>
               <TouchableOpacity onPress={onTakePhoto}>
                 <Feather

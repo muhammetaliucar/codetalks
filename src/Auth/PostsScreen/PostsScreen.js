@@ -11,8 +11,7 @@ import UserContext from '../../context/UserContext';
 const PostsScreen = () => {
   const [postsData, setPostsData] = React.useState([]);
   const {data, setData} = React.useContext(UserContext);
-
-  console.log(data, 'wegre');
+  const {theme, setTheme} = React.useContext(UserContext);
 
   React.useEffect(() => {
     firestore()
@@ -22,6 +21,19 @@ const PostsScreen = () => {
           documentSnapshot.docs.map(x => x.data()) || {},
         );
         setPostsData(parsedData);
+      });
+
+    firestore()
+      .collection('users')
+      .where('email', '==', auth().currentUser.email)
+      .onSnapshot(res => {
+        const parsedData = parsedContentData(res.docs.map(x => x.data()));
+        setData({
+          name: parsedData[0].name,
+          userId: parsedData[0].userId,
+          email: parsedData[0].email,
+          photoUrl: parsedData[0].profilphoto,
+        });
       });
   }, []);
 
@@ -37,13 +49,19 @@ const PostsScreen = () => {
   const handleSendContent = async content1 => {
     setIsModalVisible(!isModalVisible);
     await firestore().collection('posts').add({
+      author: data.name,
       content: content1,
+      profilePhoto: auth().currentUser.photoURL,
       date: new Date().toISOString(),
       uid: data.userId,
     });
   };
   return (
-    <SafeAreaView style={{flex: 1, backgroundColor: 'white'}}>
+    <SafeAreaView
+      style={{
+        flex: 1,
+        backgroundColor: theme.theme === 'light' ? 'white' : 'gray',
+      }}>
       <FlatList
         data={[...postsData].reverse()}
         renderItem={({item}) => <PostCard data={item} />}

@@ -23,6 +23,7 @@ import CustomDrawer from './components/CustomDrawer/CustomDrawer';
 import OtherProfile from './Auth/OtherProfile/OtherProfile';
 import Users from './Auth/Users/Users';
 import {UserProvider} from './context/UserContext';
+import UserContext from './context/UserContext';
 
 const Stack = createStackNavigator();
 const BottomTab = createBottomTabNavigator();
@@ -72,16 +73,21 @@ const App = () => {
   };
 
   const DrawerAuth = () => {
+    const {theme, setTheme} = React.useContext(UserContext);
+
     return (
       <Drawer.Navigator
         drawerContent={(...props) => <CustomDrawer {...props} />}
+        drawerStyle={{
+          backgroundColor: '#111',
+        }}
         screenOptions={{
           headerTitleAlign: 'center',
-          headerTintColor: '#ffb74d',
+          headerTintColor: theme.theme === 'light' ? '#ffb74d' : 'black',
         }}>
         <Drawer.Screen
           name="RoomsDrawer"
-          options={{title: 'Home'}}
+          options={{title: 'Home', drawerStyle: {backgroundColor: 'black'}}}
           component={TopTabAuth}
         />
       </Drawer.Navigator>

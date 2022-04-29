@@ -9,13 +9,11 @@ import {
 import Input from '../../components/Input';
 import styles from './Login.style';
 import Button from '../../components/Button';
-import firestore from '@react-native-firebase/firestore';
 import {Formik} from 'formik';
 import auth from '@react-native-firebase/auth';
 import {useNavigation} from '@react-navigation/native';
 import {showMessage} from 'react-native-flash-message';
 import Feather from 'react-native-vector-icons/Feather';
-import parsedContentData from '../../utils/parsedContentData';
 import UserContext from '../../context/UserContext';
 
 const initialFormValues = {
@@ -25,28 +23,15 @@ const initialFormValues = {
 
 const Login = () => {
   const navigation = useNavigation();
-  const {data, setData} = React.useContext(UserContext);
-  const [deneme, setDeneme] = React.useState();
 
   const handleSubmitFormValues = async values => {
     if (values.email == '' || values.password == '') {
       try {
-        await auth().signInWithEmailAndPassword('ali@mail.com', '123123');
+        await auth().signInWithEmailAndPassword('fatih@mail.com', '123123');
         showMessage({
           message: 'Başarıyla giriş yaptınız',
           type: 'success',
         });
-        firestore()
-          .collection('users')
-          .where('email', '==', 'ali@mail.com')
-          .onSnapshot(res => {
-            const parsedData = parsedContentData(res.docs.map(x => x.data()));
-            setData({
-              name: parsedData[0].name,
-              userId: parsedData[0].userId,
-              email: parsedData[0].email,
-            });
-          });
       } catch (error) {
         showMessage({
           message: error.code,
@@ -62,7 +47,6 @@ const Login = () => {
   };
 
   const [secure, setSecure] = React.useState(true);
-  const [icon, setIcon] = React.useState('eye');
 
   return (
     <SafeAreaView style={styles.container}>

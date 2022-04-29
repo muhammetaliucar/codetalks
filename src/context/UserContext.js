@@ -7,13 +7,17 @@ const UserContext = React.createContext();
 export const UserProvider = ({children}) => {
   const [data, setData] = React.useState({
     name: '',
-    profilPhoto: '',
+    photoUrl: '',
     email: '',
     userId: '',
   });
 
+  const [theme, setTheme] = React.useState({
+    theme: 'light',
+  });
+
   return (
-    <UserContext.Provider value={{data, setData}}>
+    <UserContext.Provider value={{data, setData, theme, setTheme}}>
       {children}
     </UserContext.Provider>
   );

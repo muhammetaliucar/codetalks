@@ -3,22 +3,30 @@ import {View, Text, Dimensions, Image, TouchableOpacity} from 'react-native';
 import {formatDistance, subDays, parseISO} from 'date-fns';
 import {useNavigation} from '@react-navigation/native';
 import firestore from '@react-native-firebase/firestore';
+import parsedContentData from '../../utils/parsedContentData';
 
 const PostCard = ({data}) => {
-  console.log(data, 'fsgs');
+  const [trial, setTrial] = React.useState();
 
-  // React.useEffect(() => {
-  //   firestore().collection("users").where(data.uid,"==","userId").onSnapshot(res => )
-  // }, []);
+  React.useEffect(() => {
+    firestore()
+      .collection('users')
+      .where('userId', '==', data.uid)
+      .onSnapshot(res => {
+        const parsedData = parsedContentData(res.docs.map(x => x.data()));
+        setTrial(parsedData);
+      });
+  }, []);
+
   const navigation = useNavigation();
-  const deneme = data.author;
+
   const formattedDate = formatDistance(parseISO(data.date), new Date(), {
     addSuffix: true,
   });
   return (
     <TouchableOpacity
       onPress={() => {
-        navigation.navigate('OtherProfile', deneme);
+        navigation.navigate('OtherProfile', data.author);
       }}
       style={{
         backgroundColor: '#ffb69d',
