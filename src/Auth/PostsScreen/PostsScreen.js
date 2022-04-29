@@ -1,5 +1,12 @@
 import React from 'react';
-import {View, SafeAreaView, Text, FlatList, Button} from 'react-native';
+import {
+  View,
+  SafeAreaView,
+  Text,
+  FlatList,
+  Button,
+  RefreshControl,
+} from 'react-native';
 import PostCard from '../../components/PostCard';
 import FloatingButton from '../../components/FloatingButton';
 import auth from '@react-native-firebase/auth';
@@ -13,8 +20,8 @@ const PostsScreen = () => {
   const {data, setData} = React.useContext(UserContext);
   const {theme, setTheme} = React.useContext(UserContext);
 
-  React.useEffect(() => {
-    firestore()
+  const fetchData = async () => {
+    await firestore()
       .collection('posts')
       .onSnapshot(documentSnapshot => {
         const parsedData = parsedContentData(
@@ -23,7 +30,7 @@ const PostsScreen = () => {
         setPostsData(parsedData);
       });
 
-    firestore()
+    await firestore()
       .collection('users')
       .where('email', '==', auth().currentUser.email)
       .onSnapshot(res => {
@@ -35,7 +42,19 @@ const PostsScreen = () => {
           photoUrl: parsedData[0].profilphoto,
         });
       });
+  };
+
+  React.useEffect(() => {
+    fetchData();
   }, []);
+
+  const [isFetching, setIsFetching] = React.useState(false);
+
+  const onRefresh = () => {
+    setIsFetching(true);
+    fetchData();
+    setIsFetching(false);
+  };
 
   const [isModalVisible, setIsModalVisible] = React.useState(false);
 
@@ -63,6 +82,9 @@ const PostsScreen = () => {
         backgroundColor: theme.theme === 'light' ? 'white' : 'gray',
       }}>
       <FlatList
+        refreshControl={
+          <RefreshControl refreshing={isFetching} onRefresh={onRefresh} />
+        }
         data={[...postsData].reverse()}
         renderItem={({item}) => <PostCard data={item} />}
       />
