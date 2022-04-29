@@ -13,10 +13,11 @@ import RoomsCard from '../../components/RoomsCard';
 import ContentInputModal from '../../components/ContentInputModal/ContentInputModal';
 import firestore from '@react-native-firebase/firestore';
 import parsedContentData from '../../utils/parsedContentData';
-import {useNavigation} from '@react-navigation/native';
+import UserContext from '../../context/UserContext';
 
 const Rooms = () => {
   const [contentList, setContentList] = useState([]);
+  const {theme, setTheme} = React.useContext(UserContext);
 
   React.useEffect(() => {
     firestore()
@@ -43,10 +44,13 @@ const Rooms = () => {
     firestore().collection('odalar').doc(content).set({content: content});
   };
 
-  const navigation = useNavigation();
-
   return (
-    <SafeAreaView style={{flex: 1, alignItems: 'center'}}>
+    <SafeAreaView
+      style={{
+        flex: 1,
+        alignItems: 'center',
+        backgroundColor: theme.theme === 'light' ? 'white' : 'gray',
+      }}>
       <View
         style={{
           flex: 1,

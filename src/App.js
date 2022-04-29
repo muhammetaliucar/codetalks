@@ -78,16 +78,18 @@ const App = () => {
     return (
       <Drawer.Navigator
         drawerContent={(...props) => <CustomDrawer {...props} />}
-        drawerStyle={{
-          backgroundColor: '#111',
-        }}
         screenOptions={{
           headerTitleAlign: 'center',
           headerTintColor: theme.theme === 'light' ? '#ffb74d' : 'black',
         }}>
         <Drawer.Screen
           name="RoomsDrawer"
-          options={{title: 'Home', drawerStyle: {backgroundColor: 'black'}}}
+          options={{
+            title: 'Home',
+            drawerStyle: {
+              backgroundColor: theme.theme === 'light' ? 'white' : 'gray',
+            },
+          }}
           component={TopTabAuth}
         />
       </Drawer.Navigator>
@@ -102,10 +104,13 @@ const App = () => {
           tabBarShowLabel: false,
           tabBarStyle: {
             height: 60,
-            elevation: 0,
+            elevation: 10,
+            position: 'absolute',
             borderTopRightRadius: 20,
             borderTopLeftRadius: 20,
+            borderRadius: 20,
             backgroundColor: '#ffb74d',
+            bottom: 10,
           },
         }}>
         <BottomTab.Screen

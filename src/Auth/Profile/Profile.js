@@ -22,6 +22,7 @@ import UserContext from '../../context/UserContext';
 const Profile = () => {
   const [contentList, setContentList] = React.useState({});
   const {data, setData} = React.useContext(UserContext);
+  const {theme, setTheme} = React.useContext(UserContext);
 
   React.useEffect(() => {
     firestore()
@@ -73,11 +74,19 @@ const Profile = () => {
 
   const MyProfileHeader = () => {
     return (
-      <View style={styles.containerUp}>
-        <View style={styles.containerUpInnerContainer}>
+      <View
+        style={
+          theme.theme === 'light'
+            ? styles['light'].containerUp
+            : styles['dark'].containerUp
+        }>
+        <View style={styles['light'].containerUpInnerContainer}>
           <View>
-            <Image style={styles.image} source={{uri: data.photoUrl}} />
-            <View style={styles.photoButtonArea}>
+            <Image
+              style={styles['light'].image}
+              source={{uri: data.photoUrl}}
+            />
+            <View style={styles['light'].photoButtonArea}>
               <TouchableOpacity onPress={onTakePhoto}>
                 <Feather
                   style={{marginEnd: 10}}
@@ -115,7 +124,7 @@ const Profile = () => {
 
   return (
     <SafeAreaView style={{flex: 1, backgroundColor: 'white'}}>
-      <View style={styles.containerDown}>
+      <View style={styles['light'].containerDown}>
         {Object.keys(contentList).length === 0 ? (
           <View style={{flex: 1}}>
             <MyProfileHeader />

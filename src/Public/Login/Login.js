@@ -25,9 +25,9 @@ const Login = () => {
   const navigation = useNavigation();
 
   const handleSubmitFormValues = async values => {
-    if (values.email == '' || values.password == '') {
+    if (values.email !== '' || values.password !== '') {
       try {
-        await auth().signInWithEmailAndPassword('fatih@mail.com', '123123');
+        await auth().signInWithEmailAndPassword(values.email, values.password);
         showMessage({
           message: 'Başarıyla giriş yaptınız',
           type: 'success',
