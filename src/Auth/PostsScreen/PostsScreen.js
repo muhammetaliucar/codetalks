@@ -82,6 +82,7 @@ const PostsScreen = () => {
         backgroundColor: theme.theme === 'light' ? 'white' : 'gray',
       }}>
       <FlatList
+        style={{marginBottom: 65}}
         refreshControl={
           <RefreshControl refreshing={isFetching} onRefresh={onRefresh} />
         }

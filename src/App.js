@@ -19,11 +19,14 @@ import {createMaterialTopTabNavigator} from '@react-navigation/material-top-tabs
 import Profile from './Auth/Profile';
 import PostsScreen from './Auth/PostsScreen';
 import {createDrawerNavigator} from '@react-navigation/drawer';
+import {DrawerActions} from '@react-navigation/native';
 import CustomDrawer from './components/CustomDrawer/CustomDrawer';
 import OtherProfile from './Auth/OtherProfile/OtherProfile';
 import Users from './Auth/Users/Users';
 import {UserProvider} from './context/UserContext';
 import UserContext from './context/UserContext';
+import {TouchableOpacity} from 'react-native-gesture-handler';
+import {useNavigation} from '@react-navigation/native';
 
 const Stack = createStackNavigator();
 const BottomTab = createBottomTabNavigator();
@@ -74,17 +77,24 @@ const App = () => {
 
   const DrawerAuth = () => {
     const {theme, setTheme} = React.useContext(UserContext);
+    const navigation = useNavigation();
 
     return (
       <Drawer.Navigator
-        drawerContent={(...props) => <CustomDrawer {...props} />}
-        screenOptions={{
-          headerTitleAlign: 'center',
-          headerTintColor: theme.theme === 'light' ? '#ffb74d' : 'black',
-        }}>
+        drawerContent={(...props) => <CustomDrawer {...props} />}>
         <Drawer.Screen
           name="RoomsDrawer"
           options={{
+            headerLeft: () => (
+              <TouchableOpacity
+                onPress={() => navigation.dispatch(DrawerActions.openDrawer())}
+                style={{marginStart: 10}}>
+                <FontAwesome name="th-list" size={20} color={'black'} />
+              </TouchableOpacity>
+            ),
+            headerBackgroundContainerStyle: {backgroundColor: 'blue'},
+            headerTitleAlign: 'center',
+            headerShadowVisible: false,
             title: 'Home',
             drawerStyle: {
               backgroundColor: theme.theme === 'light' ? 'white' : 'gray',
@@ -97,6 +107,7 @@ const App = () => {
   };
 
   const BottomTabAuth = () => {
+    const {theme, setTheme} = React.useContext(UserContext);
     return (
       <BottomTab.Navigator
         screenOptions={{
@@ -104,12 +115,13 @@ const App = () => {
           tabBarShowLabel: false,
           tabBarStyle: {
             height: 60,
-            elevation: 10,
             position: 'absolute',
             borderTopRightRadius: 20,
             borderTopLeftRadius: 20,
             borderRadius: 20,
-            backgroundColor: '#ffb74d',
+            right: 20,
+            left: 20,
+            backgroundColor: theme.theme === 'light' ? '#ffb74d' : 'gray',
             bottom: 10,
           },
         }}>
@@ -128,7 +140,6 @@ const App = () => {
           name="MessageRooms"
           component={DrawerAuth}
         />
-
         <BottomTab.Screen
           options={{
             tabBarIcon: ({focused}) => (
