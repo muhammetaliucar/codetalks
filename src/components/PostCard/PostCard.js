@@ -8,6 +8,8 @@ import parsedContentData from '../../utils/parsedContentData';
 const PostCard = ({data}) => {
   const [trial, setTrial] = React.useState();
 
+  console.log(data, 'vdfg');
+
   React.useEffect(() => {
     firestore()
       .collection('users')
@@ -44,10 +46,17 @@ const PostCard = ({data}) => {
           backgroundColor: 'white',
           borderRadius: 50,
           margin: 20,
-        }}></Image>
+        }}
+      />
       <View style={{justifyContent: 'center', flex: 1}}>
         <Text style={{fontWeight: 'bold'}}>{data.author}</Text>
         <Text style={{marginEnd: 10}}>{data.content}</Text>
+        {data.image === undefined ? null : (
+          <Image
+            style={{height: 100, width: 100, borderRadius: 10}}
+            source={{uri: data.image}}
+          />
+        )}
 
         <Text style={{marginTop: 10, fontStyle: 'italic'}}>
           {formattedDate}

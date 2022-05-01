@@ -9,5 +9,6 @@ export default StyleSheet.create({
     backgroundColor: 'white',
     marginHorizontal: 10,
     borderColor: 'white',
+    margin: 10,
   },
 });

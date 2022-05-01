@@ -67,14 +67,17 @@ const PostsScreen = () => {
 
   const handleSendContent = async content1 => {
     setIsModalVisible(!isModalVisible);
+    console.log(content1, 'regdrfg');
     await firestore().collection('posts').add({
       author: data.name,
-      content: content1,
+      content: content1.content,
       profilePhoto: auth().currentUser.photoURL,
       date: new Date().toISOString(),
       uid: data.userId,
+      image: content1.image,
     });
   };
+
   return (
     <SafeAreaView
       style={{
